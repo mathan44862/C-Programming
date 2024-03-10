@@ -1,4 +1,4 @@
-// create linkedlist with function insertAtBeginning , insertAtEnd , insertAtParticularIndex  , size , print linkedlist 
+// create linkedlist with function insertAtBeginning , insertAtEnd , insertAtParticularIndex  , size , print linkedlist , deletefirstnode , deletelastnode , deletenodeatindex
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -8,48 +8,43 @@ struct Node{
 };
 struct Node *head;
 int size();
+void insertNodeAtEnd();
+void insertNodeAtBeginning();
 void insertNodeAtBeginning(){
     struct Node *newnode = (struct Node *)malloc(sizeof(struct Node));
     printf("Enter the data : ");
     scanf("%d",&newnode->data);
-    newnode->next = NULL;
-    if(head == NULL){
-        head = newnode;
-        printf("You data is stored at begin successfully");
-    }
-    else{
-        newnode->next = head;
-        head = newnode;
-        printf("You data is stored at begin successfully");
-    }
+    newnode->next = head;
+    head = newnode;
+    printf("You data is stored at begin successfully");
 }
 void insertNodeAtTheIndex(){
-    struct Node *temp = head;
-    struct Node *newnode = (struct Node *)malloc(sizeof(struct Node));
     printf("Enter the index : ");
     int index;
     scanf("%d",&index);
-    printf("Enter the data : ");
-    scanf("%d",&newnode->data);
-    newnode->next = NULL;
-    if(temp == NULL){
-        head = newnode;
+    int listsize = size();
+    if(listsize+1 == index){
+        insertNodeAtEnd();
+    }
+    else if(listsize < index){
+        printf("Invalid index");
+    }
+    else if(index == 1){
+        insertNodeAtBeginning();
     }
     else{
-        if(index == 0){
-            newnode->next=head;
-            head = newnode;
+        index--;
+        struct Node *temp = head;
+        struct Node *newnode = (struct Node *)malloc(sizeof(struct Node));
+        printf("Enter the data : ");
+        scanf("%d",&newnode->data);
+        newnode->next = NULL;
+        for(int i=0;i<index-1;i++){
+            temp = temp->next;
         }
-        else{
-            index--;
-            while(index!=0){
-                temp = temp->next;
-                index--;
-            }
-            newnode->next = temp->next;
-            temp->next = newnode;
-            printf("The data is added at index successfully");
-        }
+        newnode->next = temp->next;
+        temp->next = newnode;
+        printf("The data is added at index successfully");
     }
 }
 void insertNodeAtEnd(){
@@ -96,10 +91,59 @@ int size(){
         return size;
     }
 }
+void deleteNodeAtBeginning(){
+    if(size() == 0){
+        printf("The linkedlist is empty!");
+    }
+    else{
+        struct Node *temp = head ;
+        head = head->next;
+        free(temp);
+        printf("The data at the first is deleted");
+    }
+}
+void deleteNodeAtEnd(){
+    if(size()==0){
+        printf("The linked list is empty!");
+    }
+    else{
+        struct Node *temp = head;
+        while(temp->next->next != NULL){
+            temp = temp->next;
+        }
+        temp->next=NULL;
+        printf("The data at the end is deleted");
+    }
+}
+void deleteNodeAtParticularIndex(){
+    int index;
+    printf("Enter the index : ");
+    scanf("%d",&index);
+    int listcount = size();
+    if(listcount == index){
+        deleteNodeAtEnd();
+    }
+    else if(index == 1){
+        deleteNodeAtBeginning();
+    }
+    else if(index > listcount){
+        printf("Invalid index");
+    }
+    else{
+        struct Node *temp = head;
+        index--;
+        for(int i=0;i<index-1;i++){
+            temp = temp->next;
+        }
+        struct Node *res = temp->next;
+        temp->next = temp->next->next;
+        free(res);
+    }
+}
 void main(){
     int choice = 0;
-    while(choice != 5 ){
-        printf("\n1 for insert data \n2 for insert data at end \n3 for insert node at particular index  \n4 for printing linked list \n5 for exit \nEnter your choice : ");
+    while(choice != 8){
+        printf("\n1 for insert data \n2 for insert data at end \n3 for insert node at particular index  \n4 for printing linked list \n5 for deleting node at beginning \n6 for deleting node at end \n7 for deleting node at particular index \n8 for exit \nEnter your choice : ");
         scanf("%d",&choice);
         if(choice  == 1){
             insertNodeAtBeginning();
@@ -113,9 +157,21 @@ void main(){
         else if(choice == 4){
             printLinkedList();
         }
-        else{
+        else if(choice == 5){
+            deleteNodeAtBeginning();
+        }
+        else if(choice == 6){
+            deleteNodeAtEnd();
+        }
+        else if(choice == 7){
+            deleteNodeAtParticularIndex();
+        }
+        else if(choice == 8){
             printf("Thank you\n");
-            break;
+        }
+        else{
+            printf("Invalid choice");
+            continue;
         }
     }
 }
