@@ -1,4 +1,3 @@
-//recursive factorial problem
 #include<stdio.h>
 int factorial(int fact){
     if(fact == 0){
